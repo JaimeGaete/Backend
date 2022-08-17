@@ -1,0 +1,14 @@
+{
+  "name": "api_restful",
+  "version": "1.0.0",
+  "description": "Desafio API RESTful",
+  "main": "servicio.js",
+  "scripts": {
+    "start": "nodemon servicio.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
