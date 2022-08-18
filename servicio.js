@@ -1,44 +1,80 @@
 
 const express = require('express')
+const bodyParser = require('body-parser');
 const { Router } = express
 const app = express()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use('/public', express.static('public'))
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const cProducto = require('./clases/productos')
-const rProductos = Router()
+const routerProd = Router()
 
 let id
+let data
+let index
 
 // Devuelve todos los productos
-rProductos.get('/', (_req, _res) => {
-    _res.send(cProducto.getAll())
+routerProd.get('/', (req, res) => {
+    res.send(cProducto.getAll())
 })
 
-rProductos.get('/:id', (_req, _res) => {
-    _res.send(cProducto.getById(_req.params.id))
+// Devuelve un producto segun su ID
+routerProd.get('/:id', (req, res) => {
+    res.send(cProducto.getById(req.params.id))
 })
-
 
 // Recibe y agrega un producto, y lo devuelve con su ID asignado
-rProductos.post('/', (_req, _res) => {
-    const data = _req.body
+routerProd.post('/', (req, res) => {
 
-    if (!data) {
-        _res.sendStatus(400)
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).send({ error: "Debe enviar el producto a insertar" });
     }
 
+    data = req.body
     // recuperar ID anterior y sumarle 1
     id = cProducto.lastId() + 1
-
-    cProducto.addProduct(id, data.title, data.price, data.thumbnail)
+    cProducto.addProd(id, data.title, data.price, data.thumbnail)
     
-    _res.send("Producto agregado con ID = " + id)
+    res.send(cProducto.getById(id))
 })
 
+// Recibe y actualiza un producto segun su ID
+routerProd.put('/', (req, res) => {
 
-app.use('/api/productos', rProductos)
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).send({ error: "Debe enviar el producto a actualizar" });
+    }
+
+    data = req.body
+    // valido si el ID existe
+    index = cProducto.exitsProd(data.id)
+    if (index !== -1)
+        cProducto.updProd(index, data.title, data.price, data.thumbnail)
+
+    res.send(cProducto.getById(data.id))
+})
+
+// Elimina un producto segun su ID
+routerProd.delete('/:id', (req, res) => {
+    id = req.params.id
+    if (!id) {
+        res.sendStatus(400).send({error: 'Debe enviar el ID del producto'})
+    } 
+
+    // valido si el ID existe
+    index = cProducto.exitsProd(id)
+    if (index !== -1) {
+        cProducto.delById(index)
+        res.send({exito: 'Producto eliminado'})
+    }
+    else {
+        res.send({error: 'Producto no encontrado'})
+    }
+})
+
+app.use('/api/productos', routerProd)
 
 app.listen(8080, () => {
     console.log('server on')

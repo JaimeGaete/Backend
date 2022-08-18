@@ -9,17 +9,16 @@ class Producto {
 
 const datosProducto = [];
 
-exports.addProduct = function (_id, _title, _price, _thumbnail) {
-    datosProducto.push(new Producto(_id, _title, _price, _thumbnail))
-    return datosProducto.length
+exports.addProd = function (_id, _title, _price, _thumbnail) {
+    return datosProducto.push(new Producto(_id, _title, _price, _thumbnail))
 }
 
 exports.getAll = function () {
     return Array.from(datosProducto)
 }
 
-exports.getById = function (findId) {
-    return datosProducto.find(({id}) => id == findId) || {error: 'producto no encontrado'};
+exports.getById = function (_findId) {
+    return datosProducto.find(({id}) => id == _findId) || {error: 'Producto no encontrado'}
 }
 
 exports.lastId = function () {
@@ -29,4 +28,18 @@ exports.lastId = function () {
         _last = datosProducto[datosProducto.length-1].id
     }
     return _last
+}
+
+exports.updProd = function (_index, _title, _price, _thumbnail) {
+    datosProducto[_index].title = _title
+    datosProducto[_index].price = _price
+    datosProducto[_index].thumbnail = _thumbnail
+}
+
+exports.delById = function (_index) {
+    return datosProducto.splice(_index, 1)
+}
+
+exports.exitsProd = function (_findId) {
+    return datosProducto.findIndex((obj) => { return obj.id == _findId})
 }
