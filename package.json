@@ -4,7 +4,7 @@
   "description": "Desafio API RESTful",
   "main": "servicio.js",
   "scripts": {
-    "start": "nodemon servicio.js"
+    "start": "node servicio.js"
   },
   "repository": {
     "url": "https://github.com/JaimeGaete/Backend/tree/ApiRESTful"
