@@ -1,5 +1,4 @@
 class Productos {
-    
     constructor() {
         this.productos = []
         this.id = 0
@@ -14,7 +13,6 @@ class Productos {
         this.productos.push(newProd)
         return newProd
     }
-
 }
 
 module.exports = Productos
