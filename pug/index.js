@@ -15,12 +15,12 @@ app.set('view engine', 'pug');
 
 app.post('/productos', (req, res) => {
     const producto = req.body
-    _productos.guardar(producto)
+    _productos.addPrd(producto)
     res.redirect('/')
 })
 
 app.get('/productos', (req, res) => {
-    const prods = _productos.listarAll()
+    const prods = _productos.getAll()
 
     res.render("vista", {
         productos: prods,
